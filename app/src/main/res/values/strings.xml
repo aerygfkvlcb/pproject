@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">pproject01</string>
+    <string name="button01">SendMSG</string>
+    <string name="button02">SendData</string>
+</resources>
