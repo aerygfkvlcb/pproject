@@ -8,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int SMS_PERMISSION_REQUEST_CODE = 101;
     private DatabaseReference databaseReference;
     private ValueEventListener valueEventListener;
+    boolean isFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +50,19 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.POST_NOTIFICATIONS},101
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},102
                     );
         }
 
         valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("MainActivity", "Data changed: " + dataSnapshot.getValue());
-                sendSMS("01092804875", "test02");
+                if (isFirst == true){
+                    isFirst = false;
+                } else {
+                    Log.d("MainActivity", "Data changed: " + dataSnapshot.getValue());
+                    sendSMS("01092804875", "test02");
+                }
             }
 
             @Override
@@ -75,14 +82,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button Button02 = findViewById(R.id.button2);
-        Button02.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // 버튼이 클릭되었을 때 Firebase Database에 정보를 올리는 메서드 호출
-                uploadDataToFirebase("Hello, Firebase!!");
-            }
-        });
+        //button click event
+//        Button Button02 = findViewById(R.id.button2);
+//        Button02.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // 버튼이 클릭되었을 때 Firebase Database에 정보를 올리는 메서드 호출
+//                uploadDataToFirebase("Hello, Firebase!!");
+//            }
+//        });
     }
 
     private void sendSMS(String phoneNumber, String message){
